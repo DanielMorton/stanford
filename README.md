@@ -1,4 +1,4 @@
-I assigned ClaudeAI to take [Stanford CS221 - Artificial Intelligence: Principles and Techniques](https://stanford-cs221.github.io/autumn2024/). It passed with flying colors.
+I assigned ClaudeAI to take [Stanford CS221 - Artificial Intelligence: Principles and Techniques](https://stanford-cs221.github.io/autumn2024/). It passed with (mostly) flying colors.
 This repository contains code for the completed assignments. Two assignments, foundations and sentiment, are from the current (Fall '24) quarter while the rest are from Spring '24 as the current quarter assignments have not yet been released.
 
 ClaudeAI solved all of the problems in a 24-hour period.
@@ -22,5 +22,5 @@ This module concerns game theory, mainly as a subset of reinforcement learning. 
 This module solves the course scheduling or constraint satisfaction problem (both abbreviated CSP). Claude had no trouble here.
 
 ### Logic
-
+This module evaluates some basic propositional logic. Claude did okay here. It got a couple symbols reversed in one logic statement (So did I; debugging took a little while) and then completely flubbed the extra credit. Even so, I'm confident that Claude outperformed many of it's fellow students. 
 
