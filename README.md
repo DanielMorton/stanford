@@ -10,4 +10,7 @@ This module consists of some bog-standard warmup problems. Topics include sparse
 This module has some simple machine learning. Claude constructed a linear regressor with a hinge loss and spare vectors for sentiment classificaton. Claude also constructed a k-means clustering algorithm for the sparse input vectors. This iss one of the few areas Claude struggled, not with getting a correct k-means algorithm but with getting a fast one. Efficient distance computations required some preprocessing, which Claude could do after being prompted, and finding a clever way to take the dot product over the intersection of two sets of keys, which stumped Claude.
 
 ### Route
-This module is an application of Dijkstra's algorithm and it's clever enhancement for maps, the A* algorithm
+This module is an application of Dijkstra's algorithm and it's clever enhancement for maps, the A* algorithm. The assignment isn't that hard. Most of the boilerplate code has already been written and all that's left is implementing the cost functions and how to handle start states, end states, and in one problem intermediate states that have to be traversed. Claude handled all of these without issue, but did develop a habit of picking imaginary locations to test. Since Claude is an AI, we call these halucinations. For anyone else it would be "Can't read a map, can ya?"
+
+## Mountain Car
+The module enters the world of reinforcement learning.
