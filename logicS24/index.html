@@ -1,0 +1,560 @@
+<head>
+  <title>From Language to Logic</title>
+  <script src="plugins/main.js"></script>
+  <script src="grader-all.js"></script>
+</head>
+
+<body
+  onload="onLoad('logic', '<a href=mailto:parisz@stanford.edu>Paris Zhang<a>', '11/30/2023', 'https://edstem.org/us/courses/42423/discussion/3932465')"
+>
+  <div id="assignmentHeader"></div>
+  <div style="background-color: #f0f0f0; padding: 20px; border-radius: 10px;">
+
+
+    <h2>Installation Guide for Homework Environment</h2>
+  
+    <h3>Prerequisites:</h3>
+    <p>Ensure that you're using Python version <code>3.10</code>. Check your Python version by running:</p>
+    <pre>
+    python --version
+    </pre>
+    <p>or</p>
+    <pre>
+    python3 --version
+    </pre>
+  
+    <h3>Installing Miniconda:</h3>
+  
+    <h4>Windows:</h4>
+    <ol>
+        <li>Download the Miniconda installer for Windows from the <a href="https://docs.conda.io/en/latest/miniconda.html" target="_blank">official site</a>.</li>
+        <li>Double-click the <code>.exe</code> file to start the installation.</li>
+        <li>Follow the installation prompts. When asked to add Miniconda to your PATH, choose "Yes."</li>
+    </ol>
+  
+    <h4>Linux:</h4>
+    <ol>
+        <li>Download the Miniconda installer for Linux from the <a href="https://docs.conda.io/en/latest/miniconda.html" target="_blank">official site</a>.</li>
+        <li>Navigate to the directory where you downloaded the installer and run:</li>
+        <pre>chmod +x Miniconda3-latest-Linux-x86_64.sh</pre>
+        <pre>./Miniconda3-latest-Linux-x86_64.sh</pre>
+        <li>Follow the installation prompts.</li>
+    </ol>
+  
+    <h4>Mac:</h4>
+    <ol>
+        <li>Download the Miniconda installer for Mac from the <a href="https://docs.conda.io/en/latest/miniconda.html" target="_blank">official site</a>.</li>
+        <li>Open the downloaded <code>.pkg</code> file to start the installation.</li>
+        <li>Follow the installation prompts.</li>
+    </ol>
+  
+    <h3>Setting Up the Homework Environment:</h3>
+    <p>After installing Miniconda, set up your environment with the following commands:</p>
+    <pre>conda create --name cs221_hw8 python=3.10</pre>
+    <pre>conda activate cs221_hw8</pre>
+  
+  </div>  
+  <br>
+  <p>
+    In this assignment, you will get some hands-on experience with logic. You'll
+    see how logic can be used to represent the meaning of natural language
+    sentences, and how it can be used to solve puzzles and prove theorems. Most
+    of this assignment will be translating English into logical formulas, but in
+    Problem 4, we will delve into the mechanics of logical inference. Finally, for the ethics question you will revisit the ethical frameworks and concepts you learned about this quarter through once again writing negative impact statements. 
+  </p>
+
+  <p>
+    <b>NOTE:</b> There are <b>mandatory</b> written questions after the extra credit problem 5 - Problem 6 and 7. Do not forget to answer these questions! Also for this assignment only, there are no hidden test cases for the programming questions --
+    if you pass all the visible test cases, then you will get full credit!
+  </p>
+
+  <p>
+    We've created a LaTeX template
+    <a href="https://stanford-cs221.github.io/autumn2023/with-prompt-templates/logic-template.zip">here</a>
+    for you to use that contains the prompts for each question.
+  </p>
+
+  <p>
+    To get started, launch a Python shell and try typing the following commands
+    to add logical expressions into the knowledge base.
+  </p>
+
+  <pre>
+from logic import *
+Rain = Atom('Rain')           # Shortcut
+Wet = Atom('Wet')             # Shortcut
+kb = createResolutionKB()     # Create the knowledge base
+kb.ask(Wet)                   # Prints "I don't know."
+kb.ask(Not(Wet))              # Prints "I don't know."
+kb.tell(Implies(Rain, Wet))   # Prints "I learned something."
+kb.ask(Wet)                   # Prints "I don't know."
+kb.tell(Rain)                 # Prints "I learned something."
+kb.tell(Wet)                  # Prints "I already knew that."
+kb.ask(Wet)                   # Prints "Yes."
+kb.ask(Not(Wet))              # Prints "No."
+kb.tell(Not(Wet))             # Prints "I don't buy that."
+</pre
+  >
+
+  To print out the contents of the knowledge base, you can call
+  <code>kb.dump()</code>. For the example above, you get:
+  <pre>
+==== Knowledge base [3 derivations] ===
+* Or(Not(Rain),Wet)
+* Rain
+- Wet
+</pre
+  >
+  In the output, '*' means the fact was explicitly added by the user, and '-'
+  means that it was inferred. Here is a table that describes how logical
+  formulas are represented in code. Use it as a reference guide:
+
+  <table>
+    <tr>
+      <td><b>Name</b></td>
+      <td><b>Mathematical notation</b></td>
+      <td><b>Code</b></td>
+    </tr>
+    <tr>
+      <td>Constant symbol</td>
+      <td>$\text{stanford}$</td>
+      <td><code>Constant('stanford')</code> (must be lowercase)</td>
+    </tr>
+    <tr>
+      <td>Variable symbol</td>
+      <td>$x$</td>
+      <td><code>Variable('$x')</code> (must be lowercase)</td>
+    </tr>
+    <tr>
+      <td>Atomic formula (atom)</td>
+      <td>$\text{Rain}$<br /><br />$\text{LocatedIn}(\text{stanford}, x)$</td>
+      <td>
+        <code>Atom('Rain')</code> (predicate must start with uppercase)<br /><br /><code
+          >Atom('LocatedIn', 'stanford', '$x')</code
+        >
+        (arguments are symbols)
+      </td>
+    </tr>
+    <tr>
+      <td>Negation</td>
+      <td>$\neg \text{Rain}$</td>
+      <td><code>Not(Atom('Rain'))</code></td>
+    </tr>
+    <tr>
+      <td>Conjunction</td>
+      <td>$\text{Rain} \wedge \text{Snow}$</td>
+      <td><code>And(Atom('Rain'), Atom('Snow'))</code></td>
+    </tr>
+    <tr>
+      <td>Disjunction</td>
+      <td>$\text{Rain} \vee \text{Snow}$</td>
+      <td><code>Or(Atom('Rain'), Atom('Snow'))</code></td>
+    </tr>
+    <tr>
+      <td>Implication</td>
+      <td>$\text{Rain} \to \text{Wet}$</td>
+      <td><code>Implies(Atom('Rain'), Atom('Wet'))</code></td>
+    </tr>
+    <tr>
+      <td>Equivalence</td>
+      <td>
+        $\text{Rain} \leftrightarrow \text{Wet}$ (syntactic sugar for
+        $\text{Rain} \to \text{Wet} \wedge \text{Wet} \to \text{Rain}$)
+      </td>
+      <td><code>Equiv(Atom('Rain'), Atom('Wet'))</code></td>
+    </tr>
+    <tr>
+      <td>Existential quantification</td>
+      <td>$\exists x . \text{LocatedIn}(\text{stanford}, x)$</td>
+      <td><code>Exists('$x', Atom('LocatedIn', 'stanford', '$x'))</code></td>
+    </tr>
+    <tr>
+      <td>Universal quantification</td>
+      <td>$\forall x . \text{MadeOfAtoms}(x)$</td>
+      <td><code>Forall('$x', Atom('MadeOfAtoms', '$x'))</code></td>
+    </tr>
+  </table>
+
+  <p>
+    The operations <code>And</code> and <code>Or</code> only take two arguments.
+    If we want to take a conjunction or disjunction of more than two, use
+    <code>AndList</code> and <code>OrList</code>. For example:
+    <code>AndList([Atom('A'), Atom('B'), Atom('C')])</code> is equivalent to
+    <code>And(And(Atom('A'), Atom('B')), Atom('C'))</code>.
+  </p>
+
+  <!------------------------------------------------------------>
+  <h2 class="problemTitle">Problem 1: Propositional logic</h2>
+
+  <p>
+    Write a propositional logic formula for each of the following English
+    sentences in the given function in <code>submission.py</code>. For example,
+    if the sentence is <i>"If it is raining, it is wet,"</i> then you would
+    write <code>Implies(Atom('Rain'), Atom('Wet'))</code>, which would be
+    $\text{Rain} \to \text{Wet}$ in symbols (see <code>examples.py</code>).
+    Note: Don't forget to return the constructed formula!
+  </p>
+
+  <ol class="problem">
+    <li class="code" id="1a">
+      <i>"If it's summer and we're in California, then it doesn't rain."</i>
+    </li>
+    <li class="code" id="1b">
+      <i>"It's wet if and only if it is raining or the sprinklers are on."</i>
+    </li>
+    <li class="code" id="1c">
+      <i>"Either it's day or night (but not both)."</i>
+    </li>
+  </ol>
+
+  You can run the following command to test each formula:
+  <pre>
+    python grader.py 1a
+    </pre
+  >
+  If your formula is wrong, then the grader will provide a counterexample, which
+  is a model that your formula and the correct formula don't agree on. For
+  example, if you accidentally wrote
+  <code>And(Atom('Rain'), Atom('Wet'))</code> for
+  <i>"If it is raining, it is wet,"</i>, then the grader would output the
+  following:
+  <pre>
+    Your formula (And(Rain,Wet)) says the following model is FALSE, but it should be TRUE:
+    * Rain = False
+    * Wet = True
+    * (other atoms if any) = False
+    </pre
+  >
+  <p>
+    In this model, it's not raining and it is wet, which satisfies the correct
+    formula $\text{Rain} \to \text{Wet}$ (TRUE), but does not satisfy the
+    incorrect formula $\text{Rain} \wedge \text{Wet}$ (FALSE). Use these
+    counterexamples to guide you in the rest of the assignment.
+  </p>
+
+  <!------------------------------------------------------------>
+  <h2 class="problemTitle">Problem 2: First-order logic</h2>
+
+  <p>
+    Write a first-order logic formula for each of the following English
+    sentences in the given function in <code>submission.py</code>. For example,
+    if the sentence is <i>"There is a light that shines,"</i> then you would
+    write
+    <code>Exists('$x', And(Atom('Light', '$x'), Atom('Shines', '$x')))</code>,
+    which would be $\exists x . \text{Light}(x) \wedge \text{Shines}(x)$ in
+    symbols (see <code>examples.py</code>).
+  </p>
+
+  <p>
+    <i>Tips</i>:
+    <ul>
+            <li> You can directly write <code>'$x'</code> instead of <code>Variable('$x')</code> to represent a variable symbol.
+            <li> Python tuples can span multiple lines, which help with
+            readability when you are writing logic expressions (some of them in this
+            homework can get quite large).
+    </ul>
+  </p>
+
+  <p></p>
+
+  <ol class="problem">
+    <li class="code" id="2a">
+      <i>"Every person has a parent."</i>
+    </li>
+    <p>
+      <b>Note: </b> You do NOT have to enforce that the parent is a "person".
+    </p>
+    <li class="code" id="2b">
+      <i>"At least one person has no children."</i>
+    </li>
+    <p>
+      <b>Note: </b> You do NOT have to enforce that the child is a "person".
+    </p>
+    <li class="code" id="2c">
+      Create a formula which defines <code>Father(x,y)</code> in terms of
+      <code>Male(x)</code> and <code>Parent(x,y)</code>.
+    </li>
+
+    <li class="code" id="2d">
+      Create a formula which defines <code>Granddaughter(x,y)</code> in terms of
+      <code>Female(x)</code> and <code>Child(x,y)</code>.
+    </li>
+    <p><b>Note: </b> It is ok for a person to be their own child.</p>
+  </ol>
+
+  <!------------------------------------------------------------>
+  <h2 class="problemTitle">Problem 3: Liar puzzle</h2>
+
+  Someone crashed the server, and accusations are flying. For this problem, we
+  will encode the evidence in first-order logic formulas to find out who crashed
+  the server. You've narrowed it down to four suspects: John, Susan, Mark, and
+  Nicole. You have the following information:
+  <ol>
+    <li>Mark says: "It wasn't me!"</li>
+    <li>John says: "It was Nicole!"</li>
+    <li>Nicole says: "No, it was Susan!"</li>
+    <li>Susan says: "Nicole's a liar."</li>
+    <li>You know that exactly one person is telling the truth.</li>
+    <li>You also know exactly one person crashed the server.</li>
+  </ol>
+  <ol class="problem">
+    <li class="code" id="3a">
+      Fill out <code>liar()</code> to return a list of 6 formulas, one for each
+      of the above facts.
+      <br />
+      The grader is set up such that you could run individual parts
+      <code>3a-0</code> to <code>3a-5</code> to debug each formula only if you
+      implement them <b>in the order specified</b>.
+    </li>
+  </ol>
+
+  You can test your code using the following commands:
+
+  <pre>
+    python grader.py 3a-0
+    python grader.py 3a-1
+    python grader.py 3a-2
+    python grader.py 3a-3
+    python grader.py 3a-4
+    python grader.py 3a-5
+    python grader.py 3a-all  # Tests the conjunction of all the formulas
+    </pre
+  >
+
+  To solve the puzzle and find the answer, <code>tell</code> the formulas to the
+  knowledge base and <code>ask</code> the query
+  <code>CrashedServer('$x')</code>, by running:
+  <pre>
+    python grader.py 3a-run
+    </pre
+  >
+
+  <!------------------------------------------------------------>
+  <h2 class="problemTitle">Problem 4: Odd and even integers</h2>
+
+  <p>
+    In this problem, we will see how to use logic to automatically prove
+    mathematical theorems. We will focus on encoding the theorem and leave the
+    proving part to the logical inference algorithm. Here is the theorem:
+  </p>
+  If the following constraints hold:
+  <ol>
+    <li>
+      Each number $x$ has exactly one successor, which is not equal to $x$.
+    </li>
+    <li>Each number is either odd or even, but not both.</li>
+    <li>The successor of an even number is odd.</li>
+    <li>The successor of an odd number is even.</li>
+    <li>For every number $x$, the successor of $x$ is larger than $x$.</li>
+    <li>
+      Larger is a transitive property: if $x$ is larger than $y$ and $y$ is
+      larger than $z$, then $x$ is larger than $z$.
+    </li>
+  </ol>
+  Then we have the following consequence:
+  <ul>
+    <li>For each number, there is an even number larger than it.</li>
+  </ul>
+
+  <p>
+    Note: in this problem, "larger than" is just an arbitrary relation, and you
+    should not assume it has any prior meaning. In other words, don't assume
+    things like "a number can't be larger than itself" unless explicitly stated.
+  </p>
+
+  <ol class="problem">
+    <li class="code" id="4a">
+      Fill out <code>ints()</code> to construct 6 formulas for each of the
+      constraints. The consequence has been filled out for you (<code
+        >query</code
+      >
+      in the code).
+      <br />
+      The grader is set up such that you could run individual parts
+      <code>4a-0</code> to <code>4a-5</code> to debug each formula only if you
+      implement them <b>in the order specified</b>. You can test your code using
+      the following commands:
+      <pre>
+    python grader.py 4a-0
+    python grader.py 4a-1
+    python grader.py 4a-2
+    python grader.py 4a-3
+    python grader.py 4a-4
+    python grader.py 4a-5
+    python grader.py 4a-all  # Tests the conjunction of all the formulas
+    </pre
+      >
+
+      To finally prove the theorem, <code>tell</code> the formulas to the
+      knowledge base and <code>ask</code> the query by running model checking
+      (on a finite model):
+      <pre>
+    python grader.py 4a-run
+    </pre
+      >
+    </li>
+  </ol>
+
+  <!------------------------------------------------------------>
+  <h2 class="problemTitle">Problem 5: Semantic parsing (extra credit)</h2>
+
+  <p>
+    Semantic parsing is the task of converting natural lanugage utterances into
+    first-order logic formulas. We have created a small set of grammar rules in
+    the code for you in
+    <code>createBaseEnglishGrammar()</code>. In this problem, you will add
+    additional grammar rules to handle a wider variety of sentences.
+    Specifically, create a <code>GrammarRule</code> for each of the following
+    sentence structures. Note that CAs will not be answering specific questions 
+    about extra credit; this part is on your own!
+  </p>
+
+  <ol class="problem">
+    <li class="code" id="5a">
+      Example: <i>Every person likes some cat.</i> General template:
+      <pre>$Clause &larr; every $Noun $Verb some $Noun</pre>
+    </li>
+    <li class="code" id="5b">
+      Example: <i>There is some cat that every person likes.</i> General
+      template:
+      <pre>$Clause &larr; there is some $Noun that every $Noun $Verb</pre>
+    </li>
+    <li class="code" id="5c">
+      Example:
+      <i>If a person likes a cat then the former feeds the latter.</i> General
+      template:
+      <pre>
+$Clause &larr; if a $Noun $Verb a $Noun then the former $Verb the latter</pre
+      >
+    </li>
+  </ol>
+
+  After implementing these functions, you should be able to try some simple
+  queries using <code>nli.py</code>! For example:
+  <pre>
+    $ python nli.py
+    
+    &gt Every person likes some cat.
+    
+    &gt&gt&gt&gt&gt I learned something.
+    ------------------------------
+    &gt Every cat is a mammal.
+    
+    &gt&gt&gt&gt&gt I learned something.
+    ------------------------------
+    &gt Every person likes some mammal?
+    
+    &gt&gt&gt&gt&gt Yes.
+    </pre
+  >
+
+
+<h2 class="problemTitle">Problem 6: Explainability of Logic-Based Systems</h2>
+
+<p>
+The notion that AI systems should be explainable and their decisions interpretable has gained traction. For instance, <a href="https://gdpr-text.com/read/article-15/#related_gdpr-a-15_1h"> GDPR’s Article 15</a> requires that individuals be provided <a href="https://academic.oup.com/idpl/article/7/4/233/4762325">“meaningful information”</a> about the logic of automated decisions. Independently of legal considerations, explainable AI protects the interests of both end users (the people employing AI to make or inform decisions) and to stakeholders (individuals affected by automated decisions). These are some of the considerations cited in the literature:
+</p>
+
+<ol>
+<li>Respect: when decisions that affect you are made intelligible to you, this is considered an expression of respect for your status as a human being whose interests are worthy of consideration.</li>
+<li>Assessing fairness of rules: knowing what rules are applied to reach a decision, we have the ability to evaluate whether the rules are fair and whether they are fairly applied to us.</li>
+<li>Contesting and correcting decisions: understanding a decision we disagree with, allows us to contest it.</li>
+<li>Ability to change user behavior: understanding a decision that has a negative impact on us allows us to adapt our behavior in order to obtain different results in the future.</li>
+</ol>
+
+<p>
+Explanability has many different meanings (see this paper by <a href="https://ir.lawnet.fordham.edu/cgi/viewcontent.cgi?article=5569&context=flr">Andrew Selbst and Solon Barocas</a>; and this paper by <a href="https://arxiv.org/pdf/1702.08608.pdf">Finale Doshi Velez and Been Kim</a>).  Intuitively, logic-based systems should have more explanability power than machine learning-based “black-box” systems.  In this problem, let us explore what kind of explanability logic-based systems might provide and which human interests are protected.
+</p>
+<p>
+Consider the Liar’s Puzzle from Problem 3.  Here, the first-order logic system takes in a set of facts and reasons over them to produce a conclusion.  In this case, the conclusion judges the truthfulness of each person, which could carry with it real-world consequences. For example, someone might be fired if they are found guilty of crashing the server, whether they did it or not (AI is used widely for the allocation of healthcare resources, credit scoring, insurance, and content moderation, among other consequential domains).
+</p>
+
+<ol class="problem">
+
+  <li class="writeup" id="6a"> Besides returning the final answer, what does a first-order logic system return that could be considered an explanation?
+    <div class="expected"> 1-2 sentences answering the question. 
+    </div>
+  </li>
+
+  <li class="writeup" id="6b">  Why might this explanation not be adequate?
+    <p>
+      Hint: think about model misspecification or framing of the question posed to the logic-based system.
+    </p>
+    <div class="expected"> 1-2 sentences answering the question. 
+    </div>
+  </li>
+
+  <li class="writeup" id="6c"> <b>(extra credit)</b>  Now, reflect on the four explainability considerations defined in this problem. Are any of these met by the explanations produced by a logic-based system? 
+    <div class="expected"> 2-4 sentences answering the question. 
+    </div>
+  </li>
+
+</ol>
+
+<p></p>
+<p></p>
+
+<h2 class="problemTitle">Problem 7: Applications of Soundness and Completeness</h2>
+
+<p>
+Two important properties in logic-based systems are soundness and completeness. A system is sound if everything that is provable (derivable) is in fact true whereas a system is complete if everything that is true has a proof (derivation).</p>
+<ul>
+  <li> <b>Definition of Soundness: </b> A set of inference rules $Rules$ is sound if: $\{f: KB \vdash f\} \subseteq \{f: KB \vDash f\}$ 
+  </li>
+  <li> <b>Definition of Completeness: </b> A set of inference rules $Rules$ is complete if: $\{f: KB \vdash f\} \supseteq \{f: KB \vDash f\}$ 
+  </li>
+</ul>
+
+<ol class="problem">
+
+  <li class="writeup" id="7a"> GPT-3.5 is a generative LLM pre-trained on a large corpus of diverse texts from the internet. The model can be fine-tuned to perform well on a wide array of downstream tasks. However, LLMs like GPT-3.5 are prone to hallucinations - or responses that are presented as fact but actually include false or misleading information <a href="#fn-1">[1]</a>. Consider anything that’s generated by the LLM to be what it derives. Applying the logic definitions of soundness and completeness, explain whether GPT-3.5 is sound and/or complete. Explain your reasoning by drawing on examples and the definitions above.
+
+    <div class="expected"> 2-3 sentences for each definition of soundness and completeness (4-6 sentences total). 
+    </div>
+
+  </li>
+
+  <p>Imagine you are choosing between two proof-based systems. System A is sound but not complete. System B is complete but not sound. Assume the only difference between System A and System B is the difference between soundness and completeness. </p>
+  <li class="writeup" id="7b"> 
+    You want to deploy one of these systems in a safety-critical setting, where acting on a false conclusion has severe consequences. Which system would you choose and why? 
+    <div class="expected"> 2-3 sentences explaining your choice, tying in the definitions of soundness and completeness. 
+    </div>
+  </li>
+
+  <li class="writeup" id="7c"> Imagine you are in a setting where you have a separate verifier system that can validate hypotheses (e.g., a human in the loop that inspects the hypotheses). You want to capture as much true information as possible in this setting. Which system would you choose and why? 
+    <div class="expected">
+      2-3 sentences explaining your choice, tying in the definitions of soundness and completeness. 
+    </div>
+  </li>
+</ol>
+<div class="problemTitle">Submission</div>
+
+  <p>
+      Submission is done on Gradescope.
+  
+      <br>
+      <br>
+      <b>Written:</b> When submitting the written parts, make sure to select <b>all</b> the pages
+      that contain part of your answer for that problem, or else you will not get credit.
+      To double check after submission, you can click on each problem link on the right side, and it should show
+      the pages that are selected for that problem.
+      <br>
+      <br>
+      <b>Programming:</b> After you submit, the autograder will take a few minutes to run. Check back after
+      it runs to make sure that your submission succeeded. If your autograder crashes, you will receive a 0 on the
+      programming part of the assignment. Note: the only file to be submitted to Gradescope is <code>submission.py</code>.
+      <br>
+      <br>
+      More details can be found in the Submission section on the course website.
+  </p>
+<br><br>
+
+<p id="fn-1"> [1]
+  <a href="https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)">https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)/</a>
+</p>
+<p id="fn-2"> [2]  What's in the Box? A Preliminary Analysis of Undesirable Content in the
+  Common Crawl Corpus <a href="https://arxiv.org/abs/2105.02732">https://arxiv.org/abs/2105.02732</a>
+</p>
+<p></p>
+
+</body>
