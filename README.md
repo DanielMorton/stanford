@@ -22,5 +22,5 @@ This module concerns game theory, mainly as a subset of reinforcement learning. 
 This module solves the course scheduling or constraint satisfaction problem (both abbreviated CSP). Claude had no trouble here.
 
 ### Logic
-This module evaluates some basic propositional logic. Claude did okay here. It got a couple symbols reversed in one logic statement (So did I; debugging took a little while) and then completely flubbed the extra credit. Even so, I'm confident that Claude outperformed many of it's fellow students. 
+This module evaluates some basic propositional logic. Claude did okay here. It got a couple symbols reversed in one logic statement (So did I; debugging took a little while) and then completely flubbed the extra credit. Even so, I'm confident that Claude outperformed many of its fellow students. 
 
