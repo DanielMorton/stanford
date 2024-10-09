@@ -12,5 +12,15 @@ This module has some simple machine learning. Claude constructed a linear regres
 ### Route
 This module is an application of Dijkstra's algorithm and it's clever enhancement for maps, the A* algorithm. The assignment isn't that hard. Most of the boilerplate code has already been written and all that's left is implementing the cost functions and how to handle start states, end states, and in one problem intermediate states that have to be traversed. Claude handled all of these without issue, but did develop a habit of picking imaginary locations to test. Since Claude is an AI, we call these halucinations. For anyone else it would be "Can't read a map, can ya?"
 
-## Mountain Car
-The module enters the world of reinforcement learning.
+### Mountain Car
+This module enters the world of reinforcement learning. To get a train car up mountain tracks Claude applied Markov Decision Processses, Value Iteration, and Q-Learning. All tests passed on the first try.
+
+### Pacman
+This module concerns game theory, mainly as a subset of reinforcement learning. Minimax, alpha-beta pruning, and Expectimax algorithms are implemented.
+
+### Scheduling
+This module solves the course scheduling or constraint satisfaction problem (both abbreviated CSP). Claude had no trouble here.
+
+### Logic
+
+
